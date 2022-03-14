@@ -1,0 +1,3 @@
+[submodule "vendor/types/quickjs"]
+	path = vendor/types/quickjs
+	url = git@github.com:mgred/quickjs-types.git

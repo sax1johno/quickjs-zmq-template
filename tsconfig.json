@@ -7,7 +7,8 @@
         "removeComments": true,
         "target": "es6",
         "module": "ESNext",
-        "strict": false
+        "strict": false,
+        "typeRoots": ["vendor/types"]
     },
     "include": [
         "./src/**/*"
