@@ -9,6 +9,7 @@ export const runtimeMachine = createMachine(
         after: {
           1000: {
             target: "pong",
+            actions: ["log"]
           },
         },
       },
@@ -16,6 +17,7 @@ export const runtimeMachine = createMachine(
         after: {
           1000: {
             target: "ping",
+            actions: ["log"]
           },
         },
       },
@@ -24,7 +26,7 @@ export const runtimeMachine = createMachine(
   {
     actions: {
       log: (context, event) => {
-        console.log(event);
+        console.log(JSON.stringify(event));
       },
     },
   }

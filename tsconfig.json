@@ -8,8 +8,9 @@
         "target": "es6",
         "module": "ESNext",
         "strict": false,
-        "typeRoots": ["vendor/types"]
+        "typeRoots": ["types"]
     },
+    "files": ["./vendor/types/quickjs/globals.d.ts", "./vendor/types/quickjs/index.d.ts", "./vendor/types/quickjs/os.d.ts", "./vendor/types/quickjs/std.d.ts"],
     "include": [
         "./src/**/*"
     ],

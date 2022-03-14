@@ -1,3 +1,5 @@
+import { setTimeout as setTimeout$1, clearTimeout as clearTimeout$1 } from 'os';
+
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -4880,14 +4882,16 @@ var runtimeMachine = createMachine({
     ping: {
       after: {
         1000: {
-          target: "pong"
+          target: "pong",
+          actions: ["log"]
         }
       }
     },
     pong: {
       after: {
         1000: {
-          target: "ping"
+          target: "ping",
+          actions: ["log"]
         }
       }
     }
@@ -4895,10 +4899,15 @@ var runtimeMachine = createMachine({
 }, {
   actions: {
     log: function log(context, event) {
-      console.log(event);
+      console.log(JSON.stringify(event));
     }
   }
 });
 
-var testService = interpret(runtimeMachine);
+var testService = interpret(runtimeMachine, {
+  clock: {
+    setTimeout: setTimeout$1,
+    clearTimeout: clearTimeout$1
+  }
+});
 testService.start();

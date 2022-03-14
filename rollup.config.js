@@ -11,7 +11,7 @@ const extensions = [ ".mjs", ".js", ".ts", ".json" ];
 
 export default {
     input: [ "./src/main.ts"],
-    external: ["std"],
+    external: [],
     plugins: [
         // Allows node_modules resolution
         resolve({
