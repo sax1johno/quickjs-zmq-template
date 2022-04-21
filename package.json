@@ -7,6 +7,7 @@
     "build": "rollup -c",
     "compile": "rollup -c && mkdir -p bin && qjsc -o bin/a.out build/main.js",
     "compile-small": "rollup -c && mkdir -p bin && qjsc -o bin/a.out -flto build/main.js",
+    "tjs": "./txiki.js/build/tjs build/main.js",
     "type-check": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
