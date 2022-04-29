@@ -920,41 +920,6 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@node-redis/bloom@1.0.1":
-  "integrity" "sha512-mXEBvEIgF4tUzdIN89LiYsbi6//EdpFA7L8M+DHCvePXg+bfHWi+ct5VI6nHUFQE5+ohm/9wmgihCH3HSkeKsw=="
-  "resolved" "https://registry.npmjs.org/@node-redis/bloom/-/bloom-1.0.1.tgz"
-  "version" "1.0.1"
-
-"@node-redis/client@^1.0.0", "@node-redis/client@1.0.4":
-  "integrity" "sha512-IM/NRAqg7MvNC3bIRQipXGrEarunrdgvrbAzsd3ty93LSHi/M+ybQulOERQi8a3M+P5BL8HenwXjiIoKm6ml2g=="
-  "resolved" "https://registry.npmjs.org/@node-redis/client/-/client-1.0.4.tgz"
-  "version" "1.0.4"
-  dependencies:
-    "cluster-key-slot" "1.1.0"
-    "generic-pool" "3.8.2"
-    "redis-parser" "3.0.0"
-    "yallist" "4.0.0"
-
-"@node-redis/graph@1.0.0":
-  "integrity" "sha512-mRSo8jEGC0cf+Rm7q8mWMKKKqkn6EAnA9IA2S3JvUv/gaWW/73vil7GLNwion2ihTptAm05I9LkepzfIXUKX5g=="
-  "resolved" "https://registry.npmjs.org/@node-redis/graph/-/graph-1.0.0.tgz"
-  "version" "1.0.0"
-
-"@node-redis/json@1.0.2":
-  "integrity" "sha512-qVRgn8WfG46QQ08CghSbY4VhHFgaTY71WjpwRBGEuqGPfWwfRcIf3OqSpR7Q/45X+v3xd8mvYjywqh0wqJ8T+g=="
-  "resolved" "https://registry.npmjs.org/@node-redis/json/-/json-1.0.2.tgz"
-  "version" "1.0.2"
-
-"@node-redis/search@1.0.3":
-  "integrity" "sha512-rsrzkGWI84di/uYtEctS/4qLusWt0DESx/psjfB0TFpORDhe7JfC0h8ary+eHulTksumor244bXLRSqQXbFJmw=="
-  "resolved" "https://registry.npmjs.org/@node-redis/search/-/search-1.0.3.tgz"
-  "version" "1.0.3"
-
-"@node-redis/time-series@1.0.2":
-  "integrity" "sha512-HGQ8YooJ8Mx7l28tD7XjtB3ImLEjlUxG1wC1PAjxu6hPJqjPshUZxAICzDqDjtIbhDTf48WXXUcx8TQJB1XTKA=="
-  "resolved" "https://registry.npmjs.org/@node-redis/time-series/-/time-series-1.0.2.tgz"
-  "version" "1.0.2"
-
 "@rollup/plugin-babel@^5.3.1":
   "integrity" "sha512-WFfdLWU/xVWKeRQnKmIAQULUI7Il0gZnBIH/ZFO069wYIfPu+8zrfp/KMW0atmELoRDq8FbiP3VCss9MhCut7Q=="
   "resolved" "https://registry.npmjs.org/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz"
@@ -1026,10 +991,10 @@
   "resolved" "https://registry.npmjs.org/@types/estree/-/estree-0.0.39.tgz"
   "version" "0.0.39"
 
-"@types/node@*", "@types/node@^17.0.21":
-  "integrity" "sha512-DBZCJbhII3r90XbQxI8Y9IjjiiOGlZ0Hr32omXIZvwwZ7p4DMMXGrKXVyPfuoBOri9XNtL0UK69jYIBIsRX3QQ=="
-  "resolved" "https://registry.npmjs.org/@types/node/-/node-17.0.21.tgz"
-  "version" "17.0.21"
+"@types/node@*", "@types/node@^17.0.26":
+  "integrity" "sha512-z/FG/6DUO7pnze3AE3TBGIjGGKkvCcGcWINe1C7cADY8hKLJPDYpzsNE37uExQ4md5RFtTCvg+M8Mu1Enyeg2A=="
+  "resolved" "https://registry.npmjs.org/@types/node/-/node-17.0.26.tgz"
+  "version" "17.0.26"
 
 "@types/resolve@1.17.1":
   "integrity" "sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw=="
@@ -1126,11 +1091,6 @@
     "ansi-styles" "^3.2.1"
     "escape-string-regexp" "^1.0.5"
     "supports-color" "^5.3.0"
-
-"cluster-key-slot@1.1.0":
-  "integrity" "sha512-2Nii8p3RwAPiFwsnZvukotvow2rIHM+yQ6ZcBXGHdniadkYGZYiGmkHJIbZPIV9nfv7m/U1IPMVVcAhoWFeklw=="
-  "resolved" "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-1.1.0.tgz"
-  "version" "1.1.0"
 
 "color-convert@^1.9.0":
   "integrity" "sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg=="
@@ -1237,11 +1197,6 @@
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
   "resolved" "https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz"
   "version" "1.1.1"
-
-"generic-pool@3.8.2":
-  "integrity" "sha512-nGToKy6p3PAbYQ7p1UlWl6vSPwfwU6TMSWK7TTu+WUY4ZjyZQGniGGt2oNVvyNSpyZYSB43zMXVLcBm08MTMkg=="
-  "resolved" "https://registry.npmjs.org/generic-pool/-/generic-pool-3.8.2.tgz"
-  "version" "3.8.2"
 
 "gensync@^1.0.0-beta.2":
   "integrity" "sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg=="
@@ -1421,30 +1376,6 @@
   "resolved" "https://registry.npmjs.org/picomatch/-/picomatch-2.3.1.tgz"
   "version" "2.3.1"
 
-"redis-errors@^1.0.0":
-  "integrity" "sha1-62LSrbFeTq9GEMBK/hUpOEJQq60="
-  "resolved" "https://registry.npmjs.org/redis-errors/-/redis-errors-1.2.0.tgz"
-  "version" "1.2.0"
-
-"redis-parser@3.0.0":
-  "integrity" "sha1-tm2CjNyv5rS4pCin3vTGvKwxyLQ="
-  "resolved" "https://registry.npmjs.org/redis-parser/-/redis-parser-3.0.0.tgz"
-  "version" "3.0.0"
-  dependencies:
-    "redis-errors" "^1.0.0"
-
-"redis@^4.0.4":
-  "integrity" "sha512-KaM1OAj/nGrSeybmmOWSMY0LXTGT6FVWgUZZrd2MYzXKJ+VGtqVaciGQeNMfZiQX+kDM8Ke4uttb54m2rm6V0A=="
-  "resolved" "https://registry.npmjs.org/redis/-/redis-4.0.4.tgz"
-  "version" "4.0.4"
-  dependencies:
-    "@node-redis/bloom" "1.0.1"
-    "@node-redis/client" "1.0.4"
-    "@node-redis/graph" "1.0.0"
-    "@node-redis/json" "1.0.2"
-    "@node-redis/search" "1.0.3"
-    "@node-redis/time-series" "1.0.2"
-
 "regenerate-unicode-properties@^10.0.1":
   "integrity" "sha512-vn5DU6yg6h8hP/2OkQo3K7uVILvY4iu0oI4t3HFa81UPkhGJwkRwM10JEc3upjdhHjs/k8GJY1sRBhk5sr69Bw=="
   "resolved" "https://registry.npmjs.org/regenerate-unicode-properties/-/regenerate-unicode-properties-10.0.1.tgz"
@@ -1608,11 +1539,6 @@
   "integrity" "sha512-V7liK1cjkZRh6R/MSneG8S5VLGRatpOUcnNieiYJX4LbwKi9eUVUH5V04ugJYVcJ+2oKDKvEFvzk0VnSC7lTag=="
   "resolved" "https://registry.npmjs.org/xstate/-/xstate-4.30.6.tgz"
   "version" "4.30.6"
-
-"yallist@4.0.0":
-  "integrity" "sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A=="
-  "resolved" "https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz"
-  "version" "4.0.0"
 
 "yarn@^1.22.17":
   "integrity" "sha512-H0p241BXaH0UN9IeH//RT82tl5PfNraVpSpEoW+ET7lmopNC61eZ+A+IDvU8FM6Go5vx162SncDL8J1ZjRBriQ=="

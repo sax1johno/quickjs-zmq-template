@@ -55,6 +55,7 @@ export const fetchMachine = createMachine<Context>({
     actions: {
       log: (context, event) => {
         console.log(JSON.stringify({...context, ...event}));
+        console.log('time:', Date.now());
       },
     },
   }

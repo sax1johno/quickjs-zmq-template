@@ -1,6 +1,32 @@
 import * as os from 'os';
 import * as std from 'std';
 
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    enumerableOnly && (symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    })), keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = null != arguments[i] ? arguments[i] : {};
+    i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
+      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+    });
+  }
+
+  return target;
+}
+
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -9,6 +35,21 @@ function _typeof(obj) {
   } : function (obj) {
     return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
   }, _typeof(obj);
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
 }
 
 /*! *****************************************************************************
@@ -143,7 +184,7 @@ var SpecialTargets;
 var start$1 = ActionTypes.Start;
 var stop$1 = ActionTypes.Stop;
 var raise$1 = ActionTypes.Raise;
-var send$1 = ActionTypes.Send;
+var send$2 = ActionTypes.Send;
 var cancel$1 = ActionTypes.Cancel;
 var nullEvent = ActionTypes.NullEvent;
 var assign$2 = ActionTypes.Assign;
@@ -814,7 +855,7 @@ function toActivityDefinition(action) {
 
 function raise(event) {
   if (!isString(event)) {
-    return send(event, {
+    return send$1(event, {
       to: SpecialTargets.Internal
     });
   }
@@ -843,10 +884,10 @@ function resolveRaise(action) {
  */
 
 
-function send(event, options) {
+function send$1(event, options) {
   return {
     to: options ? options.to : undefined,
-    type: send$1,
+    type: send$2,
     event: isFunction(event) ? event : toEventObject(event),
     delay: options ? options.delay : undefined,
     id: options && options.id !== undefined ? options.id : isFunction(event) ? event.name : getEventType(event)
@@ -1048,7 +1089,7 @@ function resolveActions(machine, currentState, currentContext, _event, actions, 
       case raise$1:
         return resolveRaise(actionObject);
 
-      case send$1:
+      case send$2:
         var sendAction = resolveSend(actionObject, updatedContext, _event, machine.options.delays); // TODO: fix ActionTypes.Init
 
         return sendAction;
@@ -2723,7 +2764,7 @@ function () {
     }
 
     switch (action.type) {
-      case send$1:
+      case send$2:
         var sendAction = action;
 
         if (typeof sendAction.delay === 'number') {
@@ -3672,7 +3713,7 @@ function () {
       var delayRef = isFunction(delay) ? "".concat(_this.id, ":delay[").concat(i, "]") : delay;
       var eventType = after(delayRef, _this.id);
 
-      _this.onEntry.push(send(eventType, {
+      _this.onEntry.push(send$1(eventType, {
         delay: delay
       }));
 
@@ -4210,7 +4251,7 @@ function () {
         updatedContext = _b[1];
 
     var _c = __read(partition(resolvedActions, function (action) {
-      return action.type === raise$1 || action.type === send$1 && action.to === SpecialTargets.Internal;
+      return action.type === raise$1 || action.type === send$2 && action.to === SpecialTargets.Internal;
     }), 2),
         raisedEvents = _c[0],
         nonRaisedActions = _c[1];
@@ -4889,36 +4930,76 @@ function createMachine(config, options) {
   return new StateNode(config, options);
 }
 
-var assign = assign$1;
+var assign = assign$1,
+    send = send$1;
 
-var runtimeMachine = createMachine({
-  id: "Hello World",
-  initial: "ping",
-  states: {
-    ping: {
-      after: {
-        1000: {
-          target: "pong",
-          actions: ["log"]
-        }
-      }
+var actorFactory = function actorFactory(machine) {
+  return createMachine({
+    "id": "Actor Machine",
+    "initial": "initializing",
+    "context": {
+      "actorRef": null
     },
-    pong: {
-      after: {
-        1000: {
-          target: "ping",
-          actions: ["log"]
+    "states": {
+      "initializing": {
+        "on": {
+          "_.start": {
+            "target": "running",
+            "actions": ["log"]
+          }
         }
+      },
+      "running": {
+        invoke: {
+          "id": "actor",
+          "src": machine
+        },
+        "on": {
+          "_.pause": {
+            "target": "paused",
+            "actions": ["log"]
+          },
+          "_.stop": {
+            "target": "stopped",
+            "actions": ["log"]
+          },
+          "*": {
+            actions: ["sendToActor", // "log"
+            "matchedWildcard"]
+          }
+        }
+      },
+      "paused": {
+        "on": {
+          "_.start": {
+            "target": "running",
+            "actions": ["log"]
+          }
+        }
+      },
+      "stopped": {
+        "entry": ["log"],
+        "type": "final"
       }
     }
-  }
-}, {
-  actions: {
-    log: function log(context, event) {
-      console.log(JSON.stringify(event));
+  }, {
+    actions: {
+      sendToActor: function sendToActor(context, event) {
+        console.log("sending ", JSON.stringify(event), " to ", JSON.stringify("actor"));
+        send(event, {
+          to: "actor"
+        });
+      },
+      log: function log(context, event) {
+        console.log("log: ", JSON.stringify(_objectSpread2(_objectSpread2({}, context), event)));
+        console.log('time:', Date.now());
+      },
+      matchedWildcard: function matchedWildcard(context, event) {
+        console.log("Matched wildcard: ", JSON.stringify(_objectSpread2(_objectSpread2({}, context), event)));
+      }
     }
-  }
-});
+  });
+};
 
 var fetchMachine = createMachine({
   id: 'fetch',
@@ -4971,32 +5052,41 @@ var fetchMachine = createMachine({
   actions: {
     log: function log(context, event) {
       console.log(JSON.stringify(Object.assign(Object.assign({}, context), event)));
+      console.log('time:', Date.now());
     }
   }
 });
 
-var testService = interpret(runtimeMachine, {
-  clock: {
-    setTimeout: os.setTimeout,
-    clearTimeout: os.clearTimeout
-  }
-});
-testService.start();
-var fetchService = interpret(fetchMachine, {
+var fetchService = interpret(actorFactory(fetchMachine), {
   clock: {
     setTimeout: os.setTimeout,
     clearTimeout: os.clearTimeout
   }
 });
 fetchService.start();
-os.setReadHandler(std["in"], function () {
-  var l = std["in"].getline();
+os.signal(os.SIGINT, exitProgram);
+os.signal(os.SIGABRT, exitProgram);
+os.signal(os.SIGTERM, exitProgram);
+os.signal(os.SIGFPE, exitProgram);
 
-  if (!l) {
+var exitProgram = function exitProgram() {
+  console.log("Should be exiting");
+  std.exit(0);
+};
+
+fetchService.onTransition(function (state) {
+  var actorRef = state.context.actorRef;
+  console.log("Parent: ", JSON.stringify(state));
+  console.log("actorRef: ", JSON.stringify(actorRef === null || actorRef === void 0 ? void 0 : actorRef.getSnapshot()));
+});
+var line;
+os.setReadHandler(std["in"], function () {
+  line = std["in"].getline();
+
+  if (!line) {
     std.out.printf("\n");
-    os.setReadHandler(std["in"], null);
   }
 
-  console.log(l);
-  fetchService.send(l);
+  console.log(line);
+  fetchService.send(line);
 });
