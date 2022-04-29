@@ -187,7 +187,7 @@ var raise$1 = ActionTypes.Raise;
 var send$2 = ActionTypes.Send;
 var cancel$1 = ActionTypes.Cancel;
 var nullEvent = ActionTypes.NullEvent;
-var assign$2 = ActionTypes.Assign;
+var assign = ActionTypes.Assign;
 ActionTypes.After;
 ActionTypes.DoneState;
 var log = ActionTypes.Log;
@@ -983,19 +983,6 @@ function resolveStop(action, context, _event) {
   return actionObject;
 }
 /**
- * Updates the current context of the machine.
- *
- * @param assignment An object that represents the partial context to update.
- */
-
-
-var assign$1 = function assign(assignment) {
-  return {
-    type: assign$2,
-    assignment: assignment
-  };
-};
-/**
  * Returns an event type that represents an implicit event that
  * is sent after the specified `delay`.
  *
@@ -1075,7 +1062,7 @@ function resolveActions(machine, currentState, currentContext, _event, actions, 
   }
 
   var _a = __read(preserveActionOrder ? [[], actions] : partition(actions, function (action) {
-    return action.type === assign$2;
+    return action.type === assign;
   }), 2),
       assignActions = _a[0],
       otherActions = _a[1];
@@ -1140,7 +1127,7 @@ function resolveActions(machine, currentState, currentContext, _event, actions, 
           return resolveStop(actionObject, updatedContext, _event);
         }
 
-      case assign$2:
+      case assign:
         {
           updatedContext = updateContext(updatedContext, _event, [actionObject], currentState);
           preservedContexts === null || preservedContexts === void 0 ? void 0 : preservedContexts.push(updatedContext);
@@ -4930,8 +4917,7 @@ function createMachine(config, options) {
   return new StateNode(config, options);
 }
 
-var assign = assign$1,
-    send = send$1;
+var send = send$1;
 
 var actorFactory = function actorFactory(machine) {
   return createMachine({
@@ -4974,6 +4960,10 @@ var actorFactory = function actorFactory(machine) {
           "_.start": {
             "target": "running",
             "actions": ["log"]
+          },
+          "_.stop": {
+            "target": "stopped",
+            "actions": ["log"]
           }
         }
       },
@@ -5001,49 +4991,23 @@ var actorFactory = function actorFactory(machine) {
   });
 };
 
-var fetchMachine = createMachine({
-  id: 'fetch',
-  initial: 'idle',
-  context: {
-    retries: 0
-  },
+var runtimeMachine = createMachine({
+  id: "Hello World",
+  initial: "ping",
   states: {
-    idle: {
-      entry: ["log"],
-      on: {
-        FETCH: {
-          "target": 'loading',
+    ping: {
+      after: {
+        1000: {
+          target: "pong",
           actions: ["log"]
         }
       }
     },
-    loading: {
-      entry: ["log"],
-      on: {
-        RESOLVE: {
-          "target": 'success',
-          "actions": ["log"]
-        },
-        REJECT: {
-          "target": 'failure',
-          "actions": ["log"]
-        }
-      }
-    },
-    success: {
-      entry: ["log"],
-      type: 'final'
-    },
-    failure: {
-      entry: ["log"],
-      on: {
-        RETRY: {
-          target: 'loading',
-          actions: [assign({
-            retries: function retries(context, event) {
-              return context.retries + 1;
-            }
-          }), "log"]
+    pong: {
+      after: {
+        1000: {
+          target: "ping",
+          actions: ["log"]
         }
       }
     }
@@ -5051,33 +5015,25 @@ var fetchMachine = createMachine({
 }, {
   actions: {
     log: function log(context, event) {
-      console.log(JSON.stringify(Object.assign(Object.assign({}, context), event)));
-      console.log('time:', Date.now());
+      console.log(JSON.stringify(event));
     }
   }
 });
 
-var fetchService = interpret(actorFactory(fetchMachine), {
+var fetchService = interpret(actorFactory(runtimeMachine), {
   clock: {
     setTimeout: os.setTimeout,
     clearTimeout: os.clearTimeout
   }
 });
 fetchService.start();
-os.signal(os.SIGINT, exitProgram);
-os.signal(os.SIGABRT, exitProgram);
-os.signal(os.SIGTERM, exitProgram);
-os.signal(os.SIGFPE, exitProgram);
-
-var exitProgram = function exitProgram() {
-  console.log("Should be exiting");
-  std.exit(0);
-};
-
 fetchService.onTransition(function (state) {
-  var actorRef = state.context.actorRef;
+  state.context.actorRef;
   console.log("Parent: ", JSON.stringify(state));
-  console.log("actorRef: ", JSON.stringify(actorRef === null || actorRef === void 0 ? void 0 : actorRef.getSnapshot()));
+});
+fetchService.onDone(function () {
+  console.log("Actor service has stopped - shutting down.");
+  exitProgram();
 });
 var line;
 os.setReadHandler(std["in"], function () {
@@ -5085,8 +5041,15 @@ os.setReadHandler(std["in"], function () {
 
   if (!line) {
     std.out.printf("\n");
+    exitProgram();
   }
 
   console.log(line);
   fetchService.send(line);
 });
+os.signal(os.SIGINT, exitProgram);
+
+var exitProgram = function exitProgram() {
+  console.log("Should be exiting");
+  std.exit(0);
+};

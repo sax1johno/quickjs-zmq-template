@@ -48,7 +48,11 @@ export const actorFactory = (machine) =>  {
                     "actions": [
                         "log"
                     ]
-                  }
+                  },
+                  "_.stop": {
+                    "target": "stopped",
+                    "actions": ["log"]
+                  },
                 }
               },
               "stopped": {
