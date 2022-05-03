@@ -1,13 +1,13 @@
-import {createMachine, assign, spawn, send} from 'xstate';
+import {createMachine, assign, spawn, send, forwardTo} from 'xstate';
 
 // Create a new actor machine that spawns the given machine
-export const actorFactory = (machine) =>  {
+export default function (machine) {
     return  createMachine(
         {
             "id": "Actor Machine",
             "initial": "initializing",
             "context": {
-                "actorRef": null
+                "error": null
             },
             "states": {
               "initializing": {
@@ -20,8 +20,16 @@ export const actorFactory = (machine) =>  {
               },
               "running": {
                 invoke: {
-                    "id": "actor",
-                    "src": machine
+                    "id": machine.id,
+                    "src": machine,
+                    "onDone": {
+                        "target": "stopped",
+                        actions: assign({ result: (context, event) => event.data })              
+                    },
+                    "onError": {
+                        "target": "errored",
+                        "actions": assign({ error: (context, event) => event.data })
+                    }
                 },
                 "on": {
                   "_.pause": {
@@ -34,9 +42,7 @@ export const actorFactory = (machine) =>  {
                   },
                   "*": {
                     actions: [
-                        "sendToActor",
-                        // "log"
-                        "matchedWildcard"
+                        forwardTo(machine.id)
                     ]
                   }
                 }
@@ -60,13 +66,19 @@ export const actorFactory = (machine) =>  {
                       "log"
                   ],
                 "type": "final"
+              },
+              "errored": {
+                  "entry": [
+                      "log"
+                  ],
+                  "type": "final"
               }
             }
           }, {
               actions: {
                   sendToActor: (context, event) => {
-                      console.log("sending ", JSON.stringify(event), " to ", JSON.stringify("actor"));
-                    send(event, { to: "actor" })                       
+                    console.log("sending ", JSON.stringify(event.type), " to ", JSON.stringify(machine.id));
+                    send(event.type, { to: machine.id });
                   },
                   log: (context, event) => {
                     console.log("log: ", JSON.stringify({...context, ...event}));
@@ -74,6 +86,11 @@ export const actorFactory = (machine) =>  {
                   },
                   matchedWildcard: (context, event) => {
                     console.log("Matched wildcard: ", JSON.stringify({...context, ...event}));
+                  },
+                  spawnMachine: (context, event) => {
+                      assign({
+                          actorRef: () => spawn(machine)
+                      });
                   }
               }
           }  

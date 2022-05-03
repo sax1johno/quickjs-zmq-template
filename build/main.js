@@ -1,32 +1,6 @@
 import * as os from 'os';
 import * as std from 'std';
 
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    enumerableOnly && (symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    })), keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = null != arguments[i] ? arguments[i] : {};
-    i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
-      _defineProperty(target, key, source[key]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
-      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-    });
-  }
-
-  return target;
-}
-
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -37,19 +11,103 @@ function _typeof(obj) {
   }, _typeof(obj);
 }
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
+  return Constructor;
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
+function _createForOfIteratorHelper(o, allowArrayLike) {
+  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+
+  if (!it) {
+    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+      if (it) o = it;
+      var i = 0;
+
+      var F = function () {};
+
+      return {
+        s: F,
+        n: function () {
+          if (i >= o.length) return {
+            done: true
+          };
+          return {
+            done: false,
+            value: o[i++]
+          };
+        },
+        e: function (e) {
+          throw e;
+        },
+        f: F
+      };
+    }
+
+    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
-  return obj;
+  var normalCompletion = true,
+      didErr = false,
+      err;
+  return {
+    s: function () {
+      it = it.call(o);
+    },
+    n: function () {
+      var step = it.next();
+      normalCompletion = step.done;
+      return step;
+    },
+    e: function (e) {
+      didErr = true;
+      err = e;
+    },
+    f: function () {
+      try {
+        if (!normalCompletion && it.return != null) it.return();
+      } finally {
+        if (didErr) throw err;
+      }
+    }
+  };
 }
 
 /*! *****************************************************************************
@@ -187,7 +245,7 @@ var raise$1 = ActionTypes.Raise;
 var send$2 = ActionTypes.Send;
 var cancel$1 = ActionTypes.Cancel;
 var nullEvent = ActionTypes.NullEvent;
-var assign = ActionTypes.Assign;
+var assign$2 = ActionTypes.Assign;
 ActionTypes.After;
 ActionTypes.DoneState;
 var log = ActionTypes.Log;
@@ -983,6 +1041,19 @@ function resolveStop(action, context, _event) {
   return actionObject;
 }
 /**
+ * Updates the current context of the machine.
+ *
+ * @param assignment An object that represents the partial context to update.
+ */
+
+
+var assign$1 = function assign(assignment) {
+  return {
+    type: assign$2,
+    assignment: assignment
+  };
+};
+/**
  * Returns an event type that represents an implicit event that
  * is sent after the specified `delay`.
  *
@@ -1055,6 +1126,21 @@ function error(id, data) {
 
   return eventObject;
 }
+/**
+ * Forwards (sends) an event to a specified service.
+ *
+ * @param target The target service to forward the event to.
+ * @param options Options to pass into the send action creator.
+ */
+
+
+function forwardTo$1(target, options) {
+  return send$1(function (_, event) {
+    return event;
+  }, _assign(_assign({}, options), {
+    to: target
+  }));
+}
 
 function resolveActions(machine, currentState, currentContext, _event, actions, preserveActionOrder) {
   if (preserveActionOrder === void 0) {
@@ -1062,7 +1148,7 @@ function resolveActions(machine, currentState, currentContext, _event, actions, 
   }
 
   var _a = __read(preserveActionOrder ? [[], actions] : partition(actions, function (action) {
-    return action.type === assign;
+    return action.type === assign$2;
   }), 2),
       assignActions = _a[0],
       otherActions = _a[1];
@@ -1127,7 +1213,7 @@ function resolveActions(machine, currentState, currentContext, _event, actions, 
           return resolveStop(actionObject, updatedContext, _event);
         }
 
-      case assign:
+      case assign$2:
         {
           updatedContext = updateContext(updatedContext, _event, [actionObject], currentState);
           preservedContexts === null || preservedContexts === void 0 ? void 0 : preservedContexts.push(updatedContext);
@@ -4917,14 +5003,85 @@ function createMachine(config, options) {
   return new StateNode(config, options);
 }
 
-var send = send$1;
+var assign = assign$1,
+    send = send$1,
+    forwardTo = forwardTo$1;
 
-var actorFactory = function actorFactory(machine) {
+var fetchMachine = createMachine({
+  id: 'fetch',
+  initial: 'idle',
+  context: {
+    retries: 0
+  },
+  states: {
+    idle: {
+      entry: ["log"],
+      on: {
+        FETCH: {
+          "target": 'loading',
+          actions: ["log"]
+        },
+        "*": {
+          actions: ["log"]
+        }
+      }
+    },
+    loading: {
+      entry: ["log"],
+      on: {
+        RESOLVE: {
+          "target": 'success',
+          "actions": ["log"]
+        },
+        REJECT: {
+          "target": 'failure',
+          "actions": ["log"]
+        },
+        "*": {
+          "actions": ["log"]
+        }
+      }
+    },
+    success: {
+      entry: ["log"],
+      type: 'final'
+    },
+    failure: {
+      entry: ["log"],
+      on: {
+        RETRY: {
+          target: 'loading',
+          actions: [assign({
+            retries: function retries(context, event) {
+              return context.retries + 1;
+            }
+          }), "log"]
+        },
+        QUIT: {
+          "target": "error"
+        }
+      }
+    },
+    error: {
+      entry: ["log"],
+      type: "final"
+    }
+  }
+}, {
+  actions: {
+    log: function log(context, event) {
+      console.log("***********", JSON.stringify(Object.assign(Object.assign({}, context), event)));
+      console.log('time:', Date.now());
+    }
+  }
+});
+
+function ActorFactory (machine) {
   return createMachine({
     "id": "Actor Machine",
     "initial": "initializing",
     "context": {
-      "actorRef": null
+      "error": null
     },
     "states": {
       "initializing": {
@@ -4937,8 +5094,24 @@ var actorFactory = function actorFactory(machine) {
       },
       "running": {
         invoke: {
-          "id": "actor",
-          "src": machine
+          "id": machine.id,
+          "src": machine,
+          "onDone": {
+            "target": "stopped",
+            actions: assign({
+              result: function result(context, event) {
+                return event.data;
+              }
+            })
+          },
+          "onError": {
+            "target": "errored",
+            "actions": assign({
+              error: function error(context, event) {
+                return event.data;
+              }
+            })
+          }
         },
         "on": {
           "_.pause": {
@@ -4950,8 +5123,7 @@ var actorFactory = function actorFactory(machine) {
             "actions": ["log"]
           },
           "*": {
-            actions: ["sendToActor", // "log"
-            "matchedWildcard"]
+            actions: [forwardTo(machine.id)]
           }
         }
       },
@@ -4970,86 +5142,159 @@ var actorFactory = function actorFactory(machine) {
       "stopped": {
         "entry": ["log"],
         "type": "final"
+      },
+      "errored": {
+        "entry": ["log"],
+        "type": "final"
       }
     }
   }, {
     actions: {
       sendToActor: function sendToActor(context, event) {
-        console.log("sending ", JSON.stringify(event), " to ", JSON.stringify("actor"));
-        send(event, {
-          to: "actor"
+        console.log("sending ", JSON.stringify(event.type), " to ", JSON.stringify(machine.id));
+        send(event.type, {
+          to: machine.id
         });
       },
       log: function log(context, event) {
-        console.log("log: ", JSON.stringify(_objectSpread2(_objectSpread2({}, context), event)));
+        console.log("log: ", JSON.stringify(Object.assign(Object.assign({}, context), event)));
         console.log('time:', Date.now());
       },
       matchedWildcard: function matchedWildcard(context, event) {
-        console.log("Matched wildcard: ", JSON.stringify(_objectSpread2(_objectSpread2({}, context), event)));
+        console.log("Matched wildcard: ", JSON.stringify(Object.assign(Object.assign({}, context), event)));
+      },
+      spawnMachine: function spawnMachine(context, event) {
       }
     }
   });
-};
+}
 
-var runtimeMachine = createMachine({
-  id: "Hello World",
-  initial: "ping",
-  states: {
-    ping: {
-      after: {
-        1000: {
-          target: "pong",
-          actions: ["log"]
-        }
+var Actor = /*#__PURE__*/function () {
+  function Actor(machine) {
+    _classCallCheck(this, Actor);
+
+    this.service = interpret(ActorFactory(machine), {
+      clock: {
+        setTimeout: os.setTimeout,
+        clearTimeout: os.clearTimeout
       }
-    },
-    pong: {
-      after: {
-        1000: {
-          target: "ping",
-          actions: ["log"]
-        }
+    });
+    this.service.onTransition(function (state) {
+      console.log("Parent: ", JSON.stringify(state));
+    });
+  }
+
+  _createClass(Actor, [{
+    key: "start",
+    value: function start() {
+      var _this = this;
+
+      return new Promise(function (resolve, reject) {
+        _this.service.start();
+
+        _this.service.onDone(function (event) {
+          console.log("Actor Service is complete: ", JSON.stringify(event));
+          resolve(event);
+        });
+      });
+    }
+  }]);
+
+  return Actor;
+}();
+
+var machines = [];
+var fetcher = new Actor(fetchMachine);
+machines.push(fetcher);
+({
+  "fetch": machines.indexOf(fetcher)
+});
+
+function run(machines) {
+  return new Promise(function (resolve, reject) {
+    var machinePromises = [];
+
+    var _iterator = _createForOfIteratorHelper(machines),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var machine = _step.value;
+        machinePromises.push(machine.start());
       }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
     }
-  }
-}, {
-  actions: {
-    log: function log(context, event) {
-      console.log(JSON.stringify(event));
-    }
-  }
-});
 
-var fetchService = interpret(actorFactory(runtimeMachine), {
-  clock: {
-    setTimeout: os.setTimeout,
-    clearTimeout: os.clearTimeout
-  }
-});
-fetchService.start();
-fetchService.onTransition(function (state) {
-  state.context.actorRef;
-  console.log("Parent: ", JSON.stringify(state));
-});
-fetchService.onDone(function () {
-  console.log("Actor service has stopped - shutting down.");
-  exitProgram();
-});
-var line;
-os.setReadHandler(std["in"], function () {
-  line = std["in"].getline();
+    var line;
+    os.setReadHandler(std["in"], function () {
+      line = std["in"].getline();
 
-  if (!line) {
-    std.out.printf("\n");
-    exitProgram();
-  }
+      if (!line) {
+        std.out.printf("\n");
+        resolve(0);
+      }
 
-  console.log(line);
-  fetchService.send(line);
-});
-os.signal(os.SIGINT, exitProgram);
+      console.log(line);
 
-var exitProgram = function exitProgram() {
+      try {
+        var data = JSON.parse(line);
+        console.log(JSON.stringify(data));
+
+        var _iterator2 = _createForOfIteratorHelper(machines),
+            _step2;
+
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var machine = _step2.value;
+            console.log(JSON.stringify(machine));
+            machine.service.send(data);
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
+      } catch (e) {
+        console.log("Error Encountered:", JSON.stringify(e.message));
+        reject(22);
+      }
+    });
+    os.signal(os.SIGINT, reject);
+    Promise.all(machinePromises).then(function (values) {
+      var _iterator3 = _createForOfIteratorHelper(values),
+          _step3;
+
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var i = _step3.value;
+
+          if (i != 0) {
+            resolve(i);
+            return;
+          }
+        }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
+      }
+
+      resolve(0);
+    })["catch"](function (values) {
+      reject(-1);
+    });
+  });
+}
+
+run(machines).then(function (value) {
+  return value;
+}, function (errorCode) {
+  return errorCode;
+})["finally"](function () {
+  var exitCode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   console.log("Should be exiting");
-  std.exit(0);
-};
+  std.exit(exitCode);
+});

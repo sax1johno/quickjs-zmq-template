@@ -1,5 +1,5 @@
 import { getopts } from '@tjs/std';
-import { addr } from './utils.js';
+import { addr } from './utils.js.js';
 
 async function handleConnection(conn) {
     console.log(`Accepted connection! ${addr(conn.localAddress)} <-> ${addr(conn.remoteAddress)}`);
@@ -27,7 +27,6 @@ async function handleConnection(conn) {
         try {
             body = JSON.parse(bodyContent);
         } catch(err){/* ignore */}
-
 
         const request = {
             method, 

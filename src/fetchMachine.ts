@@ -17,6 +17,9 @@ export const fetchMachine = createMachine<Context>({
         FETCH: {
             "target": 'loading',
             actions: [ "log" ]
+        },
+        "*": {
+          actions: [ "log" ]
         }
       }
     },
@@ -30,6 +33,9 @@ export const fetchMachine = createMachine<Context>({
         REJECT: {
             "target": 'failure',
             "actions": ["log"]
+        },
+        "*": {
+          "actions": ["log"]
         }
       }
     },
@@ -46,15 +52,22 @@ export const fetchMachine = createMachine<Context>({
               assign({retries: (context, event) => context.retries + 1}),
               "log"
               ]
+        },
+        QUIT: {
+          "target": "error"
         }
       }
+    },
+    error: {
+      entry: ["log"],
+      type: "final"
     }
   }
 },   
 {
     actions: {
       log: (context, event) => {
-        console.log(JSON.stringify({...context, ...event}));
+        console.log("***********", JSON.stringify({...context, ...event}));
         console.log('time:', Date.now());
       },
     },
