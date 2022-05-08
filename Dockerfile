@@ -28,18 +28,22 @@ WORKDIR /binaries
 
 RUN /quickjs/qjsc -o /binaries/a.out /build/${FILE_NAME}
 
-FROM alpine:3.13.2
+FROM scratch
 
-RUN apk add musl-dev
+# RUN apk add musl-dev
 
-# # Copy over the user
+# Copy over the user
 COPY --from=builder /etc/passwd /etc/passwd
 
-# # Use our non-root user
+# Use our non-root user
 USER static
 WORKDIR /home/static
 
-# # Copy the binary
+# Copy runtime libraries
+# Note: this was determined by running ldd on the binary in the build container
+COPY --from=builder /lib/ld-musl-x86_64.so.1 /lib/ld-musl-x86_64.so.1
+
+# Copy the binary
 COPY --from=builder /binaries/a.out /
 # Copy the static website
 # Use the .dockerignore file to control what ends up inside the image!
