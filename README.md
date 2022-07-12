@@ -4,10 +4,9 @@ This project is a template for creating javascript projects that can be compiled
 
 This repository also contains the `txikijs` framework which is offers platform abstraction for networking, file systems, and event loop, and more node-like features using `libuv`.  It includes many of the functions typically found in the `window` api for browsers, so many browser-side javascript libraries should work out-of-the-box as well.
 
-If you're developing code that uses bundled libraries and you aren't yet ready to create QuickJS bindings, you can use the foreign function interface (ffi) provided by [js-ffi-cross](https://github.com/ffi-cross/js-ffi-cross).  From the documentation:
+If you're developing code that uses bundled libraries and you aren't yet ready to create QuickJS bindings, you can use the foreign function interface (ffi) module found in vendor/quickjs-ffi.
 
-> js-ffi-cross is a Node.js addon for loading and calling dynamic libraries using pure JavaScript. It can be used to create bindings to native libraries without writing any C++ code.
-> It also simplifies the augmentation of \[quickjs\] with C code as it takes care of handling the translation of types across JavaScript and C, which can add reams of boilerplate code to your otherwise simple C
+> NOTE: You must have the libffi shared library compiled and installed on your system for the FFI to work.  You can find libffi at the following: https://github.com/libffi/libffi.
 
 ## Project Structure
 

@@ -4,3 +4,6 @@
 [submodule "vendor/quickjs-ffi"]
 	path = vendor/quickjs-ffi
 	url = git@github.com:shajunxing/quickjs-ffi.git
+[submodule "vendor/quickjs"]
+	path = vendor/quickjs
+	url = git@github.com:sax1johno/quickjs.git

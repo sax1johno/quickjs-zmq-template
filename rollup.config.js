@@ -6,13 +6,24 @@ import typescript from "@rollup/plugin-typescript";
 // import inject from "@rollup/plugin-inject";
 import replace from "rollup-plugin-replace";
 // import pkg from './package.json';
+import ignoreImport from 'rollup-plugin-ignore-import';
 
 const extensions = [ ".mjs", ".js", ".ts", ".json" ];
 
 export default {
-    input: [ "./src/main.ts"],
-    external: [],
+    input: [ "./src/main.mjs"],
+    external: [
+        './quickjs-ffi.so'
+    ],
     plugins: [
+        // ignoreImport({
+            // Ignore all .scss and .css file imports while building the bundle
+            // include: ['**/*.so'],
+            // Optional: replace body for ignored files. Default value is "export default undefined;"
+            // body: 'export default undefined;'
+        //   }),
+        // Copy shared objects to final output dir.
+
         // Allows node_modules resolution
         resolve({
             extensions,
@@ -21,7 +32,7 @@ export default {
         }),
         // Replace the env with production.
         replace({
-            'process.env.NODE_ENV': JSON.stringify('production')
+            'process.env.NODE_ENV': JSON.stringify('production'),
         }),
         // Compile Typescript
         typescript(),
@@ -33,7 +44,10 @@ export default {
         babel({
             extensions,
             babelHelpers: "bundled"
-        })
+        }),
+        // replace({
+        //     'quickjs-ffi.so': './quickjs-ffi.so'
+        // })
     ],
     output: {
         // "file": "build/index.js",
