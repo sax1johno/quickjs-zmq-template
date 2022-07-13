@@ -5,6 +5,7 @@ import babel from "@rollup/plugin-babel";
 import typescript from "@rollup/plugin-typescript";
 // import inject from "@rollup/plugin-inject";
 import replace from "rollup-plugin-replace";
+import copy from "rollup-plugin-copy";
 // import pkg from './package.json';
 import ignoreImport from 'rollup-plugin-ignore-import';
 
@@ -13,7 +14,9 @@ const extensions = [ ".mjs", ".js", ".ts", ".json" ];
 export default {
     input: [ "./src/main.mjs"],
     external: [
-        './quickjs-ffi.so'
+        '../lib/quickjs-ffi.so',
+        './quickjs-ffi.so',
+        '../vendor/quickjs/quickjs-ffi/quickjs-ffi.so'
     ],
     plugins: [
         // ignoreImport({
@@ -23,7 +26,11 @@ export default {
             // body: 'export default undefined;'
         //   }),
         // Copy shared objects to final output dir.
-
+        copy({
+            targets: [
+              { src: ['src/**/*.so'], dest: 'lib' }
+            ]
+          }),      
         // Allows node_modules resolution
         resolve({
             extensions,
