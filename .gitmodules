@@ -7,3 +7,6 @@
 [submodule "vendor/quickjs"]
 	path = vendor/quickjs
 	url = git@github.com:sax1johno/quickjs.git
+[submodule "vendor/quickjs-zmq"]
+	path = vendor/quickjs-zmq
+	url = git@github.com:sax1johno/quickjs-zmq.git

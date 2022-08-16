@@ -1,4 +1,3 @@
-import { CFunction, freeCif } from '../vendor/quickjs/quickjs-ffi/quickjs-ffi.js';
-// import std from std;
-// import os from os;
-
+import { Zmq, Socket, ZMQ_REP } from '../vendor/quickjs-zmq/quickjs-zmq.mjs'
+import * as os from "os";
+import * as std from "std";

@@ -1,5 +1,5 @@
-import { CFunction, CCallback } from '../../vendor/quickjs/quickjs-ffi/quickjs-ffi.js'
-import { NULL, printhex, realloc, memcpy, memset, newstring, free } from '../../vendor/quickjs/quickjs-ffi/quickjs-ffi.so'
+import { CFunction, CCallback } from '../../lib/quickjs/quickjs-ffi/quickjs-ffi.js'
+import { NULL, printhex, realloc, memcpy, memset, newstring, free } from '../../lib/quickjs/quickjs-ffi/quickjs-ffi.so'
 
 const LIBCURL_SO = '/usr/lib/x86_64-linux-gnu/libcurl.so.4'
 const CURLE_OK = 0;

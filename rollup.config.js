@@ -16,7 +16,9 @@ export default {
     external: [
         '../lib/quickjs-ffi.so',
         './quickjs-ffi.so',
-        '../vendor/quickjs/quickjs-ffi/quickjs-ffi.so'
+        '../vendor/quickjs-zmq/quickjs-zmq.so',
+        '../lib/quickjs-zmq.so',
+        './quickjs-zmq.so'
     ],
     plugins: [
         // ignoreImport({
@@ -48,10 +50,10 @@ export default {
         // Resolve CommonJS modules
         commonJS({ extensions }),
         // Transpile to ES5
-        babel({
-            extensions,
-            babelHelpers: "bundled"
-        }),
+        // babel({
+        //     extensions,
+        //     babelHelpers: "bundled"
+        // }),
         // replace({
         //     'quickjs-ffi.so': './quickjs-ffi.so'
         // })
