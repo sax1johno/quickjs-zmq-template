@@ -1,4 +1,4 @@
-import { Zmq, Socket, ZMQ_REQ } from './quickjs-zmq.mjs'
+import { Zmq, Socket, ZMQ_REQ } from '../vendor/quickjs-zmq/quickjs-zmq.mjs'
 
 import * as os from "os";
 
@@ -29,8 +29,8 @@ console.log("Binding the socket now");
     var returnCode = await sock.connect("tcp://localhost:5555");
     console.log(returnCode);
     var testObject = {
-        "key1": "value",
-        "key2": "value"
+        "topic": "us.propl.test",
+        "tz": Date.now()
     };
     sock.send(testObject).then((responseCode) => {
         console.log(`Success: ${responseCode}`);

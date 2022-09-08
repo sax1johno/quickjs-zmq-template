@@ -58,9 +58,9 @@ class Socket {
     }
 
     destroy() {
-        zmq.closeSocket(this.socket);
+        zmq.destroySocket(this.socket);
         zmq.destroyContext(this.context);
-        this.emit("disconnected");
+        this.emit("disconnected", this.socket);
         // this.socket = undefined;
         // this.context = undefined;
         this.listening = false;
