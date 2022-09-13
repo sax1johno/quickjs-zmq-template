@@ -1,7 +1,7 @@
 FROM node:lts
 
 # Install all dependencies required for compiling quickjs
-RUN apt-get update && apt-get install -y build-essential libzmq3-dev libffi6 libffi-dev
+RUN apt-get update && apt-get install -y build-essential libzmq3-dev libffi6 libffi-dev libczmq-dev
 
 VOLUME /usr/src
 
